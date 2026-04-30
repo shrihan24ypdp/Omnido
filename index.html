@@ -1,28 +1,80 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Omnido</title>
     <style>
-      .peep-heading {
-        display: flex;
-        align-items: center;
-        font-family: sans-serif;
-        font-size: 3rem;
-      }
-      .peep-svg {
-        height: 1em;
-        width: 1em;
-        margin-right: -0.2em; /* Adjust overlap */
-        position: relative;
-        z-index: 1; /* Puts man behind or in front */
-      }
+      @import url('https://fonts.cdnfonts.com/css/seven-segment');
+        body{
+            background-color: darkturquoise;
+        }
+        header{
+            border: solid;
+            border-radius: 5px;
+            background-color: green;
+        }
+        .peep-heading{ 
+            display: flex;
+            justify-content: center;
+            text-align: center;
+            font-weight: 800;
+            font-family: 'Comic Sans MS', sans-serif;
+        }
+        h5{
+            text-align: center;
+            font-family: 'Comic Sans MS', sans-serif;
+        }
+        #calcu{
+            display: inline;
+            font-family: 'Seven Segment', sans-serif; 
+            text-decoration: none;           
+            color: #000;
+            border: none;
+            border-radius: 10px;
+            background-color: turquoise;
+        }
+
+        }
     </style>
-  </head>
-  <body>
+</head>
+<body>
     <header>
-      <h1><svg width="200" height="60" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg"><text x="0" y="45" font-family="Arial" font-size="40" font-weight="bold" fill="black">Omnido</text></svg</h1>
+        <h1 class="peep-heading" aria-label="Omnido">
+            <svg viewBox="0 0 450 120" xmlns="http://w3.org" style="height: 1.8em; width: auto;">
+                <text x="90" y="78" font-family="Comic Sans MS, sans-serif" font-size="70" font-weight="900" fill="#222">Omnido</text>
+                <g transform="translate(15, 10) scale(0.95)">
+                    <path d="M40 70c-15 0-20 10-20 25v45h90V95c0-15-5-25-20-25H40z" fill="white" stroke="black" stroke-width="3"/>
+                    
+                    <!-- Agent Tie -->
+                    <path d="M60 70 l5 25 l5-25 Z" fill="black" />
+                    <path d="M60 70 l-10 15 M70 70 l10 15" stroke="black" stroke-width="2" fill="none"/>
+
+                    <!-- Head -->
+                    <g transform="rotate(2, 65, 45)">
+                        <circle cx="65" cy="45" r="24" fill="white" stroke="black" stroke-width="3"/>
+                        
+                        <!-- Sunglasses (The Agent Essential) - Shifted right to look at text -->
+                        <g transform="translate(8, 2)">
+                            <rect x="52" y="38" width="16" height="10" rx="3" fill="black"/> <!-- Lens 1 -->
+                            <rect x="72" y="38" width="16" height="10" rx="3" fill="black"/> <!-- Lens 2 -->
+                            <path d="M68 43 h4" stroke="black" stroke-width="2"/> <!-- Bridge -->
+                            <path d="M88 40 l6-2" stroke="black" stroke-width="2"/> <!-- Side arm -->
+                        </g>
+
+                        <!-- Agent Earpiece -->
+                        <path d="M42 45 q-5 0-5 5 t5 10" fill="none" stroke="black" stroke-width="1.5" />
+                        
+                        <!-- Hair (Short/Professional) -->
+                        <path d="M45 32 q20-15 40 0" fill="none" stroke="black" stroke-width="4" stroke-linecap="round"/>
+                    </g>
+                </g>
+            </svg>
+        </h1>
+        <h5>Where Everything happens</h5>
     </header>
-  </body>
+    <aside>
+        <a id="calcu" href="calculator.html">Calculator</a>
+    </aside>
+</body>
 </html>
