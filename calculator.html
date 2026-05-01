@@ -5,38 +5,227 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Omnido</title>
     <style>
-      @import url('https://fonts.cdnfonts.com/css/seven-segment');
-        body{
+        @import url('https://fonts.cdnfonts.com/css/seven-segment');
+
+        body {
             background-color: darkturquoise;
         }
-        header{
+
+        header {
             border: solid;
             border-radius: 5px;
             background-color: green;
+            padding: 10px;
         }
-        aside{
+
+        /* Fixed: Added closing bracket */
+        aside {
             border: solid;
             border-radius: 5px;
             background-color: turquoise;
-        h1{
+        }
+        #heading {
             font-family: 'Seven Segment', sans-serif;
             text-align: center;
+            margin: 0;
         }
-        #home{
-            position: absolute;
+        #home {
             padding: 10px;
             text-decoration: none;
             color: white;
-            display: inline;
-            text-decoration: none;           
-            color: #000;
+            display: inline-block;
+            font-size: 1.5rem;
         }
+                .calculator-container {
+            background: #2b2b2b;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0px 10px 30px rgba(0,0,0,0.3);
+            border: 2px solid #d4af37;
+        }
+
+        .top-row { display: flex; gap: 12px; margin-bottom: 15px; }
+
+        #display {
+            flex-grow: 1;
+            background: #000;
+            height: 70px;
+            border-radius: 8px;
+            font-size: 32px;
+            text-align: right;
+            padding: 0 15px;
+            line-height: 70px;
+            color: #00ff88;
+            font-family: 'Seven Segment', monospace;
+            border: 1px solid #444;
+        }
+
+        .side-controls { display: flex; flex-direction: column; gap: 8px; }
+
+        .side-btn {
+            padding: 5px; font-size: 11px; font-weight: bold; cursor: pointer;
+            border: none; border-radius: 6px; color: white; width: 65px; height: 31px;
+        }
+
+        .clear-btn { background-color: #c0392b; }
+        .del-btn { background-color: #d35400; }
+
+        .calculator-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        button { 
+            padding: 20px; font-size: 20px; cursor: pointer; border: none; 
+            border-radius: 12px; background-color: #3d3d3d; color: #efefef;
+            font-family: 'Seven Segment', sans-serif;
+            transition: 0.2s;
+        }
+
+        button:hover { background-color: #555; transform: scale(1.05); }
+
+        .operations { background-color: #d4af37; color: #1a1a1a; font-weight: bold; }
+        .advanced { background-color: #222; color: #00ff88; border: 1px solid #00ff88; }
+        #equal { background: #00ff88; color: #1a1a1a; font-weight: bold; grid-column: ; }
     </style>
 </head>
 <body>
-    <a id="home" href="index.html" >𖠿</a>
     <header>
-        <h1>Calculator</h1>
+        <a id="home" href="index.html">𖠿</a>
+        <h1 id="heading">Calculator</h1>
     </header>
+    <div>
+
+        <div class="calculator-container">
+            <div class="top-row">
+                <div id="display">0</div>
+                <div class="side-controls">
+                    <button class="side-btn clear-btn" onclick="clearDisplay()">CLEAR</button>
+                    <button class="side-btn del-btn" onclick="deleteLast()">DEL</button>
+                </div>
+            </div>
+            
+            <div class="calculator-grid">
+                <button class="advanced" onclick="startExponent()">^</button>
+                <button class="advanced" onclick="smartParentheses()">()</button> 
+                <button class="advanced" onclick="appendValue('%')">%</button>
+                <button class="advanced" onclick="calculateSqrt()">√</button>
+                
+                <button onclick="appendValue('7')">7</button>
+                <button onclick="appendValue('8')">8</button>
+                <button onclick="appendValue('9')">9</button>
+                <button class="operations" onclick="appendValue('/')">÷</button>
+                
+                <button onclick="appendValue('4')">4</button>
+                <button onclick="appendValue('5')">5</button>
+                <button onclick="appendValue('6')">6</button>
+                <button class="operations" onclick="appendValue('*')">×</button>
+                
+                <button onclick="appendValue('1')">1</button>
+                <button onclick="appendValue('2')">2</button>
+                <button onclick="appendValue('3')">3</button>
+                <button class="operations" onclick="appendValue('-')">-</button>
+                
+                <button onclick="appendValue('.')">.</button>
+                <button onclick="appendValue('0')">0</button>
+                <button id="equal" onclick="calculate()">=</button>
+                <button class="operations" onclick="appendValue('+')">+</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const display = document.getElementById('display');
+        let isExponentMode = false;
+
+        function appendValue(val) {
+            if (display.innerHTML === '0' || display.innerHTML === 'Error') {
+                display.innerHTML = val;
+            } else {
+                // If user types an operator while in exponent mode, exit exponent mode first
+                if (isExponentMode && ['+', '-', '*', '/', '%'].includes(val)) {
+                    isExponentMode = false;
+                }
+
+                if (isExponentMode) {
+                    let sups = display.getElementsByTagName('sup');
+                    if (sups.length > 0) {
+                        sups[sups.length - 1].innerHTML += val;
+                    } else {
+                        display.innerHTML += `<sup>${val}</sup>`;
+                    }
+                } else {
+                    display.innerHTML += val;
+                }
+            }
+        }
+
+        function startExponent() {
+            if (display.innerHTML !== '0' && display.innerHTML !== 'Error') {
+                isExponentMode = true;
+            }
+        }
+
+        function smartParentheses() {
+            const content = display.innerHTML;
+            const openCount = (content.match(/\(/g) || []).length;
+            const closeCount = (content.match(/\)/g) || []).length;
+            
+            // Logic: If there is an open bracket and the last char is a number, close it. Otherwise open.
+            const lastChar = content.slice(-1);
+            if (openCount > closeCount && !isNaN(lastChar) && lastChar !== " " || lastChar === '>') {
+                appendValue(')');
+            } else {
+                appendValue('(');
+            }
+        }
+
+        function clearDisplay() { 
+            display.innerHTML = '0'; 
+            isExponentMode = false;
+        }
+
+        function deleteLast() {
+            if (display.innerHTML !== '0' && display.innerHTML !== 'Error') {
+                // If last part is an exponent tag, handle it carefully
+                if (display.innerHTML.endsWith('</sup>')) {
+                    let sups = display.getElementsByTagName('sup');
+                    let lastSup = sups[sups.length - 1];
+                    if (lastSup.innerHTML.length > 1) {
+                        lastSup.innerHTML = lastSup.innerHTML.slice(0, -1);
+                    } else {
+                        lastSup.remove();
+                        isExponentMode = false;
+                    }
+                } else {
+                    display.innerHTML = display.innerHTML.length > 1 ? display.innerHTML.slice(0, -1) : '0';
+                }
+            }
+        }
+
+        function calculate() {
+            try {
+                let expression = display.innerHTML
+                    .replace(/<sup>(.*?)<\/sup>/g, "**($1)") 
+                    .replace(/%/g, '/100')
+                    .replace(/÷/g, '/')
+                    .replace(/×/g, '*');
+                
+                let res = eval(expression);
+                display.innerHTML = Number.isInteger(res) ? res : res.toFixed(4);
+                isExponentMode = false;
+            } catch { display.innerHTML = "Error"; }
+        }
+
+        function calculateSqrt() {
+            try {
+                let expression = display.innerHTML.replace(/<sup>(.*?)<\/sup>/g, "**($1)").replace(/%/g, '/100');
+                let res = Math.sqrt(eval(expression)).toFixed(4);
+                display.innerHTML = parseFloat(res);
+                isExponentMode = false;
+            } catch { display.innerHTML = "Error"; }
+        }
+    </script>
 </body>
 </html>
