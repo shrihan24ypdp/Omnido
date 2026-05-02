@@ -7,14 +7,96 @@
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Jim+Nightshade:wght@300;400;500;600;700&display=swap');
+      :root {
+            --bg-color: darkturquoise;
+            --header-bg: green;
+            --text-color: white;
+            --logo-fill: #222;
+            --calc-bg: #2b2b2b;
+            --calc-border: #d4af37;
+            --display-bg: #000;
+            --display-text: #00ff88;
+            --btn-bg: #3d3d3d;
+            --btn-text: #efefef;
+            --border-color: #000;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #121212;
+            --header-bg: #062a06;
+            --text-color: #e0e0e0;
+            --logo-fill: #ffffff;
+            --calc-bg: #1a1a1a;
+            --calc-border: #00ff88;
+            --display-bg: #050505;
+            --border-color: #444;
+        }
       body{
         font-family: 'Jim Nightshade', sans-serif;
         background-color: darkturquoise;
+      }
+      header {
+            width: 100%;
+            max-width: 800px;
+            border: solid 2px var(--border-color);
+            border-radius: 8px;
+            background-color: var(--header-bg);
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+        }
+
+        #home-link {
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 2rem;
+            padding: 0 15px;
+        }
+
+        .peep-heading { display: flex; align-items: center; margin: 0; cursor: pointer; }
+        .logo-text { fill: var(--logo-fill); transition: fill 0.4s; }
+
+        /* Character Animations */
+        .peep-heading:hover .character-head { transform: translateY(-5px); }
+        .character-head { transition: transform 0.3s; transform-origin: center; }
+        @keyframes eyeBlink { 0%, 90%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
+        .eye-l { animation: eyeBlink 4s infinite; transform-origin: 55px 42px; }
+        .eye-r { animation: eyeBlink 4s infinite; transform-origin: 75px 42px; }
+
+        /* Calculator Styles */
+        .calculator-container {
+            background: var(--calc-bg);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0px 10px 30px rgba(0,0,0,0.4);
+            border: 2px solid var(--calc-border);
+            width: 350px;
+            transition: 0.3s;
+        }
     </style>
   </head>
   <body>
     <header>
-      <h1>Travel Guide</h1>
+        <a id="home-link" href="index.html">𖠿</a>
+        <div class="peep-heading">
+            <svg viewBox="0 0 350 100" xmlns="http://w3.org" style="height: 60px; width: auto;">
+                <text x="90" y="70" class="logo-text" font-family="Jim Nightshade" font-size="50" font-weight="700">Travel Guide</text>
+                <g transform="translate(5, 5) scale(0.7)">
+                    <path d="M40 70c-15 0-20 10-20 25v45h90V95c0-15-5-25-20-25H40z" fill="#f9f9f9" stroke="black" stroke-width="3"/>
+                    <g class="character-head">
+                        <circle cx="65" cy="45" r="24" fill="#ffdbac" stroke="black" stroke-width="3"/>
+                        <circle cx="65" cy="32" r="2.5" fill="red" />
+                        <circle class="eye-l" cx="55" cy="42" r="2.5" fill="black" />
+                        <circle class="eye-r" cx="75" cy="42" r="2.5" fill="black" />
+                        <path d="M41 45 q0-20 24-20 t24 20" fill="none" stroke="black" stroke-width="5" stroke-linecap="round"/>
+                    </g>
+                </g>
+            </svg>
+        </div>
+        <div style="width: 50px;"></div> <!-- Spacer to center logo -->
     </header>
     <p>Do you Want to travel? Look for where to go!</p>
   </body>
