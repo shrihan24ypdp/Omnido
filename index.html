@@ -1,96 +1,177 @@
-<!DOCTYPE html> 
-<html> 
-<head> 
-    <meta charset="UTF-8"> 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-    <title>SarvKarta</title> 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SarvKarta</title>
     <link rel="icon" type="image/x-icon" href="/favicon.png">
-    <style> 
-        @import url('https://fonts.googleapis.com/css2?family=Laila:wght@300;400;500;600;700&display=swap');
-        body { 
-            background-color: darkturquoise; 
-            margin: 0; 
-            padding: 20px; 
-            font-family: 'Laila', sans-serif;
-        } 
-        header { 
-            border: solid 2px #000; 
-            border-radius: 5px; 
-            background-color: green; 
-            padding: 10px; 
-        } 
-        .peep-heading { 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            font-weight: 800; 
-            margin: 0; 
-        } 
-        h4 { 
-            text-align: center; 
-            margin-top: 10px; 
-            color: white; /* Added for better visibility on green */
-        } 
-        h5 { 
-            text-align: center; 
-            margin-top: 10px; 
-            color: white; /* Added for better visibility on green */
-        } 
-        h6 { 
-            text-align: center; 
-            margin-top: 10px; 
-            color: white; /* Added for better visibility on green */
-        } 
-        #calcu { 
-            display: inline-block; 
-            margin-top: 20px; 
-            padding: 10px 20px; 
-            text-decoration: none; 
-            color: #000; 
-            border-radius: 10px; 
-            background-color: turquoise; 
-            border: 1px solid #000; 
-        } 
-        aside {
-            border: solid;
-            border-radius: 5px;
-            background-color: turquoise;
+    <style>
+        @import url('https://googleapis.com');
+
+        :root {
+            --bg-color: darkturquoise;
+            --header-bg: green;
+            --text-color: white;
+            --logo-fill: #222;
+            --btn-bg: turquoise;
+            --btn-text: #000;
+            --border-color: #000;
+            --aside-bg: turquoise;
         }
-    </style> 
-</head> 
-<body> 
-    <header> 
-        <h1 class="peep-heading" aria-label="Omnido"> 
-            <svg viewBox="0 0 450 120" xmlns="http://www.w3.org/2000/svg" style="height: 1.8em; width: auto;"> 
-                <text x="90" y="78" font-family="Laila, sans-serif" font-size="70" font-weight="900" fill="#222">SarvKarta</text> 
-                <g transform="translate(15, 10) scale(0.95)"> 
-                    <path d="M40 70c-15 0-20 10-20 25v45h90V95c0-15-5-25-20-25H40z" fill="white" stroke="black" stroke-width="3"/> 
-                    <path d="M60 70 l5 25 l5-25 Z" fill="black" /> 
-                    <path d="M60 70 l-10 15 M70 70 l10 15" stroke="black" stroke-width="2" fill="none"/> 
-                    <g transform="rotate(2, 65, 45)"> 
-                        <circle cx="65" cy="45" r="24" fill="white" stroke="black" stroke-width="3"/> 
-                        <!-- Sunglasses --> 
-                        <g transform="translate(8, 2)"> 
-                            <rect x="52" y="38" width="16" height="10" rx="3" fill="black"/> 
-                            <rect x="72" y="38" width="16" height="10" rx="3" fill="black"/> 
-                            <path d="M68 43 h4" stroke="black" stroke-width="2"/> 
-                            <path d="M88 40 l6-2" stroke="black" stroke-width="2"/> 
-                        </g> 
-                        <!-- Agent Earpiece --> 
-                        <path d="M42 45 q-5 0-5 5 t5 10" fill="none" stroke="black" stroke-width="1.5" /> 
-                        <!-- Hair --> 
-                        <path d="M45 32 q20-15 40 0" fill="none" stroke="black" stroke-width="4" stroke-linecap="round"/> 
-                    </g> 
-                </g> 
-            </svg> 
-        </h1> 
+
+        [data-theme="dark"] {
+            --bg-color: #121212;
+            --header-bg: #062a06;
+            --text-color: #e0e0e0;
+            --logo-fill: #ffffff;
+            --btn-bg: #006060;
+            --btn-text: #ffffff;
+            --border-color: #444;
+            --aside-bg: #1e1e1e;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+            font-family: 'Amita', cursive;
+            transition: background-color 0.4s ease;
+        }
+
+        header {
+            border: solid 2px var(--border-color);
+            border-radius: 8px;
+            background-color: var(--header-bg);
+            padding: 20px;
+            transition: 0.4s;
+        }
+
+        .peep-heading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        /* Peeping Animation on Hover */
+        .peep-heading:hover .character-head {
+            transform: translateY(-8px) rotate(2deg);
+        }
+
+        .character-head {
+            transition: transform 0.3s ease-out;
+            transform-origin: center;
+        }
+
+        /* Sunglasses Blink Animation */
+        @keyframes blink {
+            0%, 90%, 100% { transform: scaleY(1); }
+            95% { transform: scaleY(0.1); }
+        }
+        .glasses {
+            animation: blink 4s infinite;
+            transform-origin: center;
+        }
+
+        h4, h5, h6 {
+            text-align: center;
+            margin-top: 10px;
+            color: var(--text-color);
+        }
+
+        .btn-nav {
+            display: inline-block;
+            margin: 10px;
+            padding: 12px 25px;
+            text-decoration: none;
+            color: var(--btn-text);
+            font-weight: 700;
+            border-radius: 12px;
+            background-color: var(--btn-bg);
+            border: 2px solid var(--border-color);
+            transition: all 0.2s ease;
+            box-shadow: 4px 4px 0px var(--border-color);
+        }
+
+        .btn-nav:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px var(--border-color);
+        }
+
+        aside {
+            border: solid 2px var(--border-color);
+            border-radius: 8px;
+            background-color: var(--aside-bg);
+            margin-top: 20px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .logo-text { fill: var(--logo-fill); transition: fill 0.4s; }
+
+        .theme-toggle {
+            position: fixed; top: 25px; right: 25px;
+            background: var(--btn-bg); border: 2px solid var(--border-color);
+            width: 50px; height: 50px; border-radius: 50%;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            z-index: 1000;
+        }
+        .theme-toggle .moon { display: none; color: white; }
+        [data-theme="dark"] .theme-toggle .sun { display: none; }
+        [data-theme="dark"] .theme-toggle .moon { display: block; }
+    </style>
+</head>
+<body>
+
+    <button class="theme-toggle" onclick="toggleTheme()">
+        <svg class="sun" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+        <svg class="moon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    </button>
+
+    <header>
+        <h1 class="peep-heading">
+            <svg viewBox="0 0 480 150" xmlns="http://w3.org" style="height: 2.2em; width: auto;">
+                <text x="110" y="85" class="logo-text" font-family="Amita" font-size="75" font-weight="700">SarvKarta</text>
+                
+                <g transform="translate(15, 15) scale(0.95)">
+                    <!-- Body (Nehru Jacket style detail) -->
+                    <path d="M40 70c-15 0-20 10-20 25v45h90V95c0-15-5-25-20-25H40z" fill="#f9f9f9" stroke="black" stroke-width="3"/>
+                    <rect x="62" y="70" width="6" height="70" fill="#ddd" /> <!-- Button strip -->
+                    
+                    <g class="character-head">
+                        <circle cx="65" cy="45" r="24" fill="#ffdbac" stroke="black" stroke-width="3"/>
+                        
+                        <!-- Indian Tilak -->
+                        <circle cx="65" cy="32" r="2.5" fill="red" />
+                        
+                        <!-- Animated Sunglasses -->
+                        <g class="glasses" transform="translate(8, 2)">
+                            <rect x="52" y="38" width="16" height="10" rx="3" fill="black"/>
+                            <rect x="72" y="38" width="16" height="10" rx="3" fill="black"/>
+                            <path d="M68 43 h4" stroke="black" stroke-width="2"/>
+                        </g>
+                        
+                        <!-- Traditional Hair Style -->
+                        <path d="M41 45 q0-20 24-20 t24 20" fill="none" stroke="black" stroke-width="5" stroke-linecap="round"/>
+                    </g>
+                </g>
+            </svg>
+        </h1>
         <h4>Where Everything happens</h4>
         <h5>Sarvasyapi Bhavedhetu</h5>
         <h6>सर्वस्यापि भवेद्धेतुः</h6>
-    </header> 
-    <aside> 
-        <a id="calcu" href="calculator.html">Calculator</a>
-        <a id="calcu" href="travel.html">Travel Guide</a> 
-    </aside> 
-</body> 
+    </header>
+
+    <aside>
+        <a class="btn-nav" href="calculator.html">Calculator</a>
+        <a class="btn-nav" href="travel.html">Travel Guide</a>
+    </aside>
+
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            html.getAttribute('data-theme') === 'dark' ? html.removeAttribute('data-theme') : html.setAttribute('data-theme', 'dark');
+        }
+    </script>
+</body>
 </html>
