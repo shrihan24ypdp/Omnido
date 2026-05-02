@@ -6,7 +6,7 @@
     <title>SarvKarta</title>
     <link rel="icon" type="image/x-icon" href="/favicon.png">
     <style>
-        @import url('https://googleapis.com');
+        @import url('https://googleapis.com/css2?family=Amita:wght@400;700&display=swap');
 
         :root {
             --bg-color: darkturquoise;
@@ -63,14 +63,20 @@
             transform-origin: center;
         }
 
-        /* Sunglasses Blink Animation */
-        @keyframes blink {
+        /* Fixed Eye Blinking Animation */
+        @keyframes eyeBlink {
             0%, 90%, 100% { transform: scaleY(1); }
             95% { transform: scaleY(0.1); }
         }
-        .glasses {
-            animation: blink 4s infinite;
-            transform-origin: center;
+
+        .eye-left {
+            animation: eyeBlink 4s infinite;
+            transform-origin: 55px 42px; /* Center of left eye */
+        }
+
+        .eye-right {
+            animation: eyeBlink 4s infinite;
+            transform-origin: 75px 42px; /* Center of right eye */
         }
 
         h4, h5, h6 {
@@ -134,24 +140,24 @@
                 <text x="110" y="85" class="logo-text" font-family="Amita" font-size="75" font-weight="700">SarvKarta</text>
                 
                 <g transform="translate(15, 15) scale(0.95)">
-                    <!-- Body (Nehru Jacket style detail) -->
+                    <!-- Body -->
                     <path d="M40 70c-15 0-20 10-20 25v45h90V95c0-15-5-25-20-25H40z" fill="#f9f9f9" stroke="black" stroke-width="3"/>
-                    <rect x="62" y="70" width="6" height="70" fill="#ddd" /> <!-- Button strip -->
+                    <rect x="62" y="70" width="6" height="70" fill="#ddd" />
                     
                     <g class="character-head">
                         <circle cx="65" cy="45" r="24" fill="#ffdbac" stroke="black" stroke-width="3"/>
                         
-                        <!-- Indian Tilak -->
+                        <!-- Tilak -->
                         <circle cx="65" cy="32" r="2.5" fill="red" />
                         
-                        <!-- Animated Sunglasses -->
-                        <g class="glasses" transform="translate(8, 2)">
-                            <rect x="52" y="38" width="16" height="10" rx="3" fill="black"/>
-                            <rect x="72" y="38" width="16" height="10" rx="3" fill="black"/>
-                            <path d="M68 43 h4" stroke="black" stroke-width="2"/>
-                        </g>
+                        <!-- Eyes -->
+                        <circle class="eye-left" cx="55" cy="42" r="2.5" fill="black" />
+                        <circle class="eye-right" cx="75" cy="42" r="2.5" fill="black" />
                         
-                        <!-- Traditional Hair Style -->
+                        <!-- Smile -->
+                        <path d="M58 55 q7 5 14 0" fill="none" stroke="black" stroke-width="2" stroke-linecap="round"/>
+                        
+                        <!-- Hair -->
                         <path d="M41 45 q0-20 24-20 t24 20" fill="none" stroke="black" stroke-width="5" stroke-linecap="round"/>
                     </g>
                 </g>
