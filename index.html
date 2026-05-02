@@ -1,86 +1,83 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Omnido</title>
-    <style>
-        @font-face {
-            font-family: 'Ananda Namaste';
-            src: url('fonts/Ananda Namaste.ttf') format('truetype');
-        }
-
-        body {
-            background-color: darkturquoise;
-            font-family: 'Ananda Namaste', sans-serif;
-            margin: 0;
-            padding: 20px;
-        }
-
-        header {
-            font-family: 'Ananda Namaste', sans-serif;
-            border: solid 2px #000;
-            border-radius: 5px;
-            background-color: green;
-            padding: 10px;
-        }
-
-        .peep-heading {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: 800;
-            margin: 0;
-        }
-
-        h5 {
-            text-align: center;
-            margin-top: 10px;
-        }
-
-        #calcu {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 10px 20px;
-            font-family: 'Comic Sans MS', cursive, sans-serif;
-            text-decoration: none;
-            color: #000;
-            border-radius: 10px;
-            background-color: turquoise;
-            border: 1px solid #000;
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <h1 class="peep-heading" aria-label="Omnido">
-            <svg viewBox="0 0 450 120" xmlns="http://www.w3.org/2000/svg" style="height: 1.8em; width: auto;">
-                <text x="90" y="78" font-family="Ananda Namaste, sans-serif" font-size="70" font-weight="900" fill="#222">Omnido</text>
-                <g transform="translate(15, 10) scale(0.95)">
-                    <path d="M40 70c-15 0-20 10-20 25v45h90V95c0-15-5-25-20-25H40z" fill="white" stroke="black" stroke-width="3"/>
-                    <path d="M60 70 l5 25 l5-25 Z" fill="black" />
-                    <path d="M60 70 l-10 15 M70 70 l10 15" stroke="black" stroke-width="2" fill="none"/>
-                    <g transform="rotate(2, 65, 45)">
-                        <circle cx="65" cy="45" r="24" fill="white" stroke="black" stroke-width="3"/>
-                        <!-- Sunglasses -->
-                        <g transform="translate(8, 2)">
-                            <rect x="52" y="38" width="16" height="10" rx="3" fill="black"/>
-                            <rect x="72" y="38" width="16" height="10" rx="3" fill="black"/>
-                            <path d="M68 43 h4" stroke="black" stroke-width="2"/>
-                            <path d="M88 40 l6-2" stroke="black" stroke-width="2"/>
-                        </g>
-                        <!-- Agent Earpiece -->
-                        <path d="M42 45 q-5 0-5 5 t5 10" fill="none" stroke="black" stroke-width="1.5" />
-                        <!-- Hair -->
-                        <path d="M45 32 q20-15 40 0" fill="none" stroke="black" stroke-width="4" stroke-linecap="round"/>
-                    </g>
-                </g>
-            </svg>
-        </h1>
-        <h5>Where Everything happens</h5>
-    </header>
-    <aside>
-        <a id="calcu" href="calculator.html">Calculator</a>
-    </aside>
-</body>
+<!DOCTYPE html> 
+<html> 
+<head> 
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title>Omnido</title> 
+    <style> 
+        @font-face { 
+            font-family: 'Ananda Namaste'; 
+            /* Ensure this file exists at this location */
+            src: url('fonts/Ananda Namaste.ttf') format('truetype'); 
+        } 
+        body { 
+            background-color: darkturquoise; 
+            font-family: 'Ananda Namaste', sans-serif; 
+            margin: 0; 
+            padding: 20px; 
+        } 
+        header { 
+            font-family: 'Ananda Namaste', sans-serif; 
+            border: solid 2px #000; 
+            border-radius: 5px; 
+            background-color: green; 
+            padding: 10px; 
+        } 
+        .peep-heading { 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            font-weight: 800; 
+            margin: 0; 
+        } 
+        h5 { 
+            text-align: center; 
+            margin-top: 10px; 
+            color: white; /* Added for better visibility on green */
+        } 
+        #calcu { 
+            display: inline-block; 
+            margin-top: 20px; 
+            padding: 10px 20px; 
+            font-family: 'Comic Sans MS', cursive, sans-serif; 
+            text-decoration: none; 
+            color: #000; 
+            border-radius: 10px; 
+            background-color: turquoise; 
+            border: 1px solid #000; 
+        } 
+    </style> 
+</head> 
+<body> 
+    <header> 
+        <h1 class="peep-heading" aria-label="Omnido"> 
+            <svg viewBox="0 0 450 120" xmlns="http://www.w3.org/2000/svg" style="height: 1.8em; width: auto;"> 
+                <text x="90" y="78" font-family="Ananda Namaste, sans-serif" font-size="70" font-weight="900" fill="#222">Omnido</text> 
+                <g transform="translate(15, 10) scale(0.95)"> 
+                    <path d="M40 70c-15 0-20 10-20 25v45h90V95c0-15-5-25-20-25H40z" fill="white" stroke="black" stroke-width="3"/> 
+                    <path d="M60 70 l5 25 l5-25 Z" fill="black" /> 
+                    <path d="M60 70 l-10 15 M70 70 l10 15" stroke="black" stroke-width="2" fill="none"/> 
+                    <g transform="rotate(2, 65, 45)"> 
+                        <circle cx="65" cy="45" r="24" fill="white" stroke="black" stroke-width="3"/> 
+                        <!-- Sunglasses --> 
+                        <g transform="translate(8, 2)"> 
+                            <rect x="52" y="38" width="16" height="10" rx="3" fill="black"/> 
+                            <rect x="72" y="38" width="16" height="10" rx="3" fill="black"/> 
+                            <path d="M68 43 h4" stroke="black" stroke-width="2"/> 
+                            <path d="M88 40 l6-2" stroke="black" stroke-width="2"/> 
+                        </g> 
+                        <!-- Agent Earpiece --> 
+                        <path d="M42 45 q-5 0-5 5 t5 10" fill="none" stroke="black" stroke-width="1.5" /> 
+                        <!-- Hair --> 
+                        <path d="M45 32 q20-15 40 0" fill="none" stroke="black" stroke-width="4" stroke-linecap="round"/> 
+                    </g> 
+                </g> 
+            </svg> 
+        </h1> 
+        <h5>Where Everything happens</h5> 
+    </header> 
+    <aside> 
+        <a id="calcu" href="calculator.html">Calculator</a> 
+    </aside> 
+</body> 
 </html>
