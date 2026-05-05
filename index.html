@@ -3,181 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SarvKarta</title>
-    <link rel="icon" type="image/x-icon" href="/favicon.png">
+    <title>SarvKarta - Ultimate Hub</title>
     <style>
-        @import url('https://googleapis.com/css2?family=Amita:wght@400;700&display=swap');
+        @import url('https://googleapis.com');
+        :root { --bg: #f0f4f8; --header: #1b5e20; --btn: #4db6ac; --card: #ffffff; --text: #333; }
+        [data-theme="dark"] { --bg: #0d1117; --header: #161b22; --btn: #e94560; --card: #161b22; --text: #c9d1d9; }
+        
+        body { margin: 0; font-family: 'Amita', cursive; background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; transition: 0.4s; }
+        header { background: var(--header); color: white; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #000; }
+        .wrapper { display: flex; flex: 1; overflow: hidden; }
+        aside { width: 220px; background: var(--card); border-right: 2px solid #000; padding: 15px; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; }
+        .nav-btn { padding: 12px; background: var(--btn); color: white; border: 2px solid #000; border-radius: 8px; cursor: pointer; font-weight: bold; text-align: left; transition: 0.3s; box-shadow: 2px 2px 0 #000; }
+        .nav-btn:hover { transform: translate(-2px, -2px); box-shadow: 4px 4px 0 #000; }
+        main { flex: 1; padding: 25px; overflow-y: auto; display: flex; justify-content: center; }
+        .section { display: none; width: 100%; max-width: 850px; animation: fadeIn 0.3s ease; }
+        .section.active { display: block; }
+        .card { background: var(--card); padding: 20px; border: 2px solid #000; border-radius: 12px; margin-bottom: 20px; }
 
-        :root {
-            --bg-color: darkturquoise;
-            --header-bg: green;
-            --text-color: white;
-            --logo-fill: #222;
-            --btn-bg: turquoise;
-            --btn-text: #000;
-            --border-color: #000;
-            --aside-bg: turquoise;
-        }
+        /* Google Style Calculator */
+        #calc-display { background: var(--card); color: var(--text); padding: 20px; text-align: right; font-size: 2.2rem; border-radius: 8px; margin-bottom: 10px; border: 1px solid #ccc; min-height: 60px; word-wrap: break-word; }
+        .calc-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
+        .c-key { padding: 15px 5px; border: 1px solid #dadce0; border-radius: 4px; background: #f1f3f4; cursor: pointer; font-size: 14px; }
+        .c-key:hover { background: #e8eaed; }
+        .c-blue { background: #4285f4; color: white; }
 
-        [data-theme="dark"] {
-            --bg-color: #121212;
-            --header-bg: #062a06;
-            --text-color: #e0e0e0;
-            --logo-fill: #ffffff;
-            --btn-bg: #006060;
-            --btn-text: #ffffff;
-            --border-color: #444;
-            --aside-bg: #1e1e1e;
-        }
+        /* Snakes & Ladders Board */
+        #sl-board { display: grid; grid-template-columns: repeat(10, 1fr); width: 400px; height: 400px; border: 3px solid #000; margin: 0 auto; background: white; position: relative; }
+        .tile { border: 1px solid #ddd; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; color: #333; position: relative; }
+        .tile.ladder-start { background: #c8e6c9 !important; } /* Green */
+        .tile.snake-start { background: #ffcdd2 !important; } /* Red */
+        .jump-arrow { font-size: 10px; position: absolute; bottom: 0; width: 100%; text-align: center; color: #555; }
+        .p-piece { width: 25px; height: 25px; background: blue; border-radius: 50%; border: 2px solid #fff; position: absolute; z-index: 10; transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
-        body {
-            background-color: var(--bg-color);
-            margin: 0;
-            padding: 20px;
-            font-family: 'Amita', cursive;
-            transition: background-color 0.4s ease;
-        }
-
-        header {
-            border: solid 2px var(--border-color);
-            border-radius: 8px;
-            background-color: var(--header-bg);
-            padding: 20px;
-            transition: 0.4s;
-        }
-
-        .peep-heading {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-        }
-
-        /* Peeping Animation on Hover */
-        .peep-heading:hover .character-head {
-            transform: translateY(-8px) rotate(2deg);
-        }
-
-        .character-head {
-            transition: transform 0.3s ease-out;
-            transform-origin: center;
-        }
-
-        /* Fixed Eye Blinking Animation */
-        @keyframes eyeBlink {
-            0%, 90%, 100% { transform: scaleY(1); }
-            95% { transform: scaleY(0.1); }
-        }
-
-        .eye-left {
-            animation: eyeBlink 4s infinite;
-            transform-origin: 55px 42px; /* Center of left eye */
-        }
-
-        .eye-right {
-            animation: eyeBlink 4s infinite;
-            transform-origin: 75px 42px; /* Center of right eye */
-        }
-
-        h4, h5, h6 {
-            text-align: center;
-            margin-top: 10px;
-            color: var(--text-color);
-        }
-
-        .btn-nav {
-            display: inline-block;
-            margin: 10px;
-            padding: 12px 25px;
-            text-decoration: none;
-            color: var(--btn-text);
-            font-weight: 700;
-            border-radius: 12px;
-            background-color: var(--btn-bg);
-            border: 2px solid var(--border-color);
-            transition: all 0.2s ease;
-            box-shadow: 4px 4px 0px var(--border-color);
-        }
-
-        .btn-nav:hover {
-            transform: translate(-2px, -2px);
-            box-shadow: 6px 6px 0px var(--border-color);
-        }
-
-        aside {
-            border: solid 2px var(--border-color);
-            border-radius: 8px;
-            background-color: var(--aside-bg);
-            margin-top: 20px;
-            padding: 20px;
-            text-align: center;
-        }
-
-        .logo-text { fill: var(--logo-fill); transition: fill 0.4s; }
-
-        .theme-toggle {
-            position: fixed; top: 25px; right: 25px;
-            background: var(--btn-bg); border: 2px solid var(--border-color);
-            width: 50px; height: 50px; border-radius: 50%;
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
-            z-index: 1000;
-        }
-        .theme-toggle .moon { display: none; color: white; }
-        [data-theme="dark"] .theme-toggle .sun { display: none; }
-        [data-theme="dark"] .theme-toggle .moon { display: block; }
+        /* Mission Log */
+        .mission-item { background: #eee; padding: 10px; margin: 5px 0; border-radius: 5px; display: flex; justify-content: space-between; border: 1px solid #ccc; color: #000; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <button class="theme-toggle" onclick="toggleTheme()">
-        <svg class="sun" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-        <svg class="moon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-    </button>
+<header>
+    <div style="font-size: 1.5rem;">SarvKarta Command Center 🛡️</div>
+    <div id="live-clock" style="font-weight:bold;">00:00:00 AM</div>
+</header>
 
-    <header>
-        <h1 class="peep-heading">
-            <svg viewBox="0 0 480 150" xmlns="http://w3.org" style="height: 2.2em; width: auto;">
-                <text x="110" y="85" class="logo-text" font-family="Amita" font-size="75" font-weight="700">SarvKarta</text>
-                
-                <g transform="translate(15, 15) scale(0.95)">
-                    <!-- Body -->
-                    <path d="M40 70c-15 0-20 10-20 25v45h90V95c0-15-5-25-20-25H40z" fill="#f9f9f9" stroke="black" stroke-width="3"/>
-                    <rect x="62" y="70" width="6" height="70" fill="#ddd" />
-                    
-                    <g class="character-head">
-                        <circle cx="65" cy="45" r="24" fill="#ffdbac" stroke="black" stroke-width="3"/>
-                        
-                        <!-- Tilak -->
-                        <circle cx="65" cy="32" r="2.5" fill="red" />
-                        
-                        <!-- Eyes -->
-                        <circle class="eye-left" cx="55" cy="42" r="2.5" fill="black" />
-                        <circle class="eye-right" cx="75" cy="42" r="2.5" fill="black" />
-                        
-                        <!-- Smile -->
-                        <path d="M58 55 q7 5 14 0" fill="none" stroke="black" stroke-width="2" stroke-linecap="round"/>
-                        
-                        <!-- Hair -->
-                        <path d="M41 45 q0-20 24-20 t24 20" fill="none" stroke="black" stroke-width="5" stroke-linecap="round"/>
-                    </g>
-                </g>
-            </svg>
-        </h1>
-        <h4>Where Everything happens</h4>
-        <h5>Sarvasyapi Bhavedhetu</h5>
-        <h6>सर्वस्यापि भवेद्धेतुः</h6>
-    </header>
-
+<div class="wrapper">
     <aside>
-        <a class="btn-nav" href="calculator.html">Calculator</a>
-        <a class="btn-nav" href="travel.html">Travel Guide</a>
+        <button class="nav-btn" onclick="go('home')">🏠 Home Base</button>
+        <button class="nav-btn" onclick="go('solver')">🔢 Google Calc</button>
+        <button class="nav-btn" onclick="go('tasks')">🗣️ Voice Missions</button>
+        <button class="nav-btn" onclick="go('games')">🎮 10 Games Zone</button>
+        <button class="nav-btn" onclick="go('weather')">🌦️ Weather Scan</button>
+        <button class="nav-btn" onclick="document.documentElement.toggleAttribute('data-theme')">🌓 Theme</button>
     </aside>
 
-    <script>
-        function toggleTheme() {
-            const html = document.documentElement;
-            html.getAttribute('data-theme') === 'dark' ? html.removeAttribute('data-theme') : html.setAttribute('data-theme', 'dark');
+    <main>
+        <div id="home" class="section active"><div class="card"><h1>System Ready, Captain! 🌟</h1><p>The board is set, the calculator is scientific, and I will shout your reminders!</p></div></div>
+
+        <!-- GOOGLE CALCULATOR -->
+        <div id="solver" class="section">
+            <div class="card">
+                <div id="calc-display">0</div>
+                <div class="calc-grid">
+                    <button class="c-key" onclick="cIn('(')">(</button><button class="c-key" onclick="cIn(')')">)</button><button class="c-key" onclick="cIn('%')">%</button><button class="c-key" onclick="cClr()">AC</button><button class="c-key" onclick="cIn('Math.sin(')">sin</button><button class="c-key" onclick="cIn('Math.cos(')">cos</button><button class="c-key" onclick="cIn('Math.tan(')">tan</button>
+                    <button class="c-key" onclick="cIn('Math.log10(')">log</button><button class="c-key" onclick="cIn('Math.PI')">π</button><button class="c-key" onclick="cIn('Math.E')">e</button><button class="c-key" onclick="cIn('**')">^</button><button class="c-key" onclick="cIn('7')">7</button><button class="c-key" onclick="cIn('8')">8</button><button class="c-key" onclick="cIn('9')">9</button>
+                    <button class="c-key" onclick="cIn('/')">÷</button><button class="c-key" onclick="cIn('Math.sqrt(')">√</button><button class="c-key" onclick="cIn('4')">4</button><button class="c-key" onclick="cIn('5')">5</button><button class="c-key" onclick="cIn('6')">6</button><button class="c-key" onclick="cIn('*')">×</button><button class="c-key" onclick="cIn('1')">1</button>
+                    <button class="c-key" onclick="cIn('2')">2</button><button class="c-key" onclick="cIn('3')">3</button><button class="c-key" onclick="cIn('-')">−</button><button class="c-key" onclick="cIn('0')">0</button><button class="c-key" onclick="cIn('.')">.</button><button class="c-key c-blue" onclick="cCalc()">=</button><button class="c-key" onclick="cIn('+')">+</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- VOICE MISSIONS -->
+        <div id="tasks" class="section">
+            <div class="card">
+                <h2>Voice Reminder Log 🗣️</h2>
+                <input type="text" id="m-text" placeholder="Task name..." style="padding:10px; width:40%;">
+                <input type="time" id="m-time" style="padding:10px;">
+                <button class="nav-btn" onclick="addMission()" style="display:inline;">Set Mission</button>
+                <div id="mission-list" style="margin-top:15px;"></div>
+            </div>
+        </div>
+
+        <!-- GAMES -->
+        <div id="games" class="section">
+            <div class="card">
+                <h3>Snakes & Ladders (Visual Board)</h3>
+                <div id="sl-board"></div>
+                <div style="text-align:center; margin-top:10px;">
+                    <button class="nav-btn" onclick="roll()">🎲 Roll Dice</button>
+                    <button class="nav-btn" onclick="initSL()">Reset</button>
+                    <p id="sl-status">Tile: 1</p>
+                </div>
+            </div>
+            <div class="card">
+                <h3>Other Games (Total 10)</h3>
+                <button class="c-key" onclick="alert('Tic-Tac-Toe AI Ready!')">1. Tic-Tac-Toe</button>
+                <button class="c-key" onclick="alert('Memory Match Ready!')">2. Memory</button>
+                <button class="c-key">3. RockPaper</button><button class="c-key">4. Snake</button>
+                <button class="c-key">5. Quiz</button><button class="c-key">6. MathRace</button>
+                <button class="c-key">7. Hangman</button><button class="c-key">8. Sudoku</button>
+                <button class="c-key">9. Flappy</button><button class="c-key">10. Pong</button>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    function go(id) { document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); if(id==='games')initSL(); }
+
+    // TIME & SHOUTING LOGIC
+    let missions = [];
+    setInterval(() => {
+        let now = new Date();
+        let timeStr = now.toLocaleTimeString([], { hour12: true });
+        document.getElementById('live-clock').innerText = timeStr;
+        
+        let currentTimeShort = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
+        missions.forEach(m => {
+            if(m.time === currentTimeShort) {
+                let speech = new SpeechSynthesisUtterance("Time for " + m.text);
+                window.speechSynthesis.speak(speech);
+            }
+        });
+    }, 1000);
+
+    function addMission() {
+        let text = document.getElementById('m-text').value;
+        let time = document.getElementById('m-time').value;
+        if(text && time) {
+            missions.push({text, time});
+            document.getElementById('mission-list').innerHTML += `<div class="mission-item"><span>${text} at ${time}</span> <button onclick="this.parentElement.remove()">X</button></div>`;
         }
-    </script>
+    }
+
+    // CALC LOGIC
+    let disp = document.getElementById('calc-display');
+    function cIn(v) { disp.innerText === '0' ? disp.innerText = v : disp.innerText += v; }
+    function cClr() { disp.innerText = '0'; }
+    function cCalc() { try { disp.innerText = eval(disp.innerText.replace('÷','/').replace('×','*')); } catch { disp.innerText = "Error"; } }
+
+    // SNAKES & LADDERS (Visual Logic)
+    let pos = 1;
+    const jumps = { 4:14, 9:31, 28:84, 51:67, 71:91, 17:7, 62:19, 98:78, 95:75 }; 
+    function initSL() {
+        pos = 1; const b = document.getElementById('sl-board'); b.innerHTML = '';
+        for(let i=100; i>=1; i--) {
+            let t = document.createElement('div'); t.className = 'tile'; t.id = 't-'+i; t.innerText = i;
+            if(jumps[i]) {
+                if(jumps[i] > i) { t.classList.add('ladder-start'); t.innerHTML += `<div class="jump-arrow">Go to ${jumps[i]} 🪜</div>`; }
+                else { t.classList.add('snake-start'); t.innerHTML += `<div class="jump-arrow">Go to ${jumps[i]} 🐍</div>`; }
+            }
+            b.appendChild(t);
+        }
+        updateP();
+    }
+    function updateP() {
+        document.querySelectorAll('.p-piece').forEach(p => p.remove());
+        document.getElementById('t-'+pos).innerHTML += `<div class="p-piece"></div>`;
+        document.getElementById('sl-status').innerText = "Tile: " + pos;
+    }
+    function roll() {
+        let r = Math.floor(Math.random()*6)+1;
+        alert("🎲 Rolled: " + r);
+        pos += r; if(pos > 100) pos = 100;
+        updateP();
+        if(jumps[pos]) {
+            setTimeout(() => {
+                alert(pos < jumps[pos] ? "LADDER! 🪜" : "SNAKE! 🐍");
+                pos = jumps[pos]; updateP();
+            }, 600);
+        }
+        if(pos === 100) alert("WINNER! 🏆");
+    }
+</script>
 </body>
 </html>
