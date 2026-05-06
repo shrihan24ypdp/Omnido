@@ -5,176 +5,284 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SarvKarta - Ultimate Hub</title>
     <style>
-        @import url('https://googleapis.com');
-        :root { --bg: #f0f4f8; --header: #1b5e20; --btn: #4db6ac; --card: #ffffff; --text: #333; }
-        [data-theme="dark"] { --bg: #0d1117; --header: #161b22; --btn: #e94560; --card: #161b22; --text: #c9d1d9; }
-        
-        body { margin: 0; font-family: 'Amita', cursive; background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; transition: 0.4s; }
-        header { background: var(--header); color: white; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #000; }
-        .wrapper { display: flex; flex: 1; overflow: hidden; }
-        aside { width: 220px; background: var(--card); border-right: 2px solid #000; padding: 15px; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; }
-        .nav-btn { padding: 12px; background: var(--btn); color: white; border: 2px solid #000; border-radius: 8px; cursor: pointer; font-weight: bold; text-align: left; transition: 0.3s; box-shadow: 2px 2px 0 #000; }
-        .nav-btn:hover { transform: translate(-2px, -2px); box-shadow: 4px 4px 0 #000; }
-        main { flex: 1; padding: 25px; overflow-y: auto; display: flex; justify-content: center; }
-        .section { display: none; width: 100%; max-width: 850px; animation: fadeIn 0.3s ease; }
-        .section.active { display: block; }
-        .card { background: var(--card); padding: 20px; border: 2px solid #000; border-radius: 12px; margin-bottom: 20px; }
+        :root {
+            --bg: #202124;
+            --card: #303134;
+            --text: #e8eaed;
+            --accent: #8ab4f8;
+            --google-gray: #3c4043;
+        }
 
-        /* Google Style Calculator */
-        #calc-display { background: var(--card); color: var(--text); padding: 20px; text-align: right; font-size: 2.2rem; border-radius: 8px; margin-bottom: 10px; border: 1px solid #ccc; min-height: 60px; word-wrap: break-word; }
-        .calc-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
-        .c-key { padding: 15px 5px; border: 1px solid #dadce0; border-radius: 4px; background: #f1f3f4; cursor: pointer; font-size: 14px; }
-        .c-key:hover { background: #e8eaed; }
-        .c-blue { background: #4285f4; color: white; }
+        body {
+            margin: 0;
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Roboto', Arial, sans-serif;
+            overflow-x: hidden;
+        }
 
-        /* Snakes & Ladders Board */
-        #sl-board { display: grid; grid-template-columns: repeat(10, 1fr); width: 400px; height: 400px; border: 3px solid #000; margin: 0 auto; background: white; position: relative; }
-        .tile { border: 1px solid #ddd; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; color: #333; position: relative; }
-        .tile.ladder-start { background: #c8e6c9 !important; } /* Green */
-        .tile.snake-start { background: #ffcdd2 !important; } /* Red */
-        .jump-arrow { font-size: 10px; position: absolute; bottom: 0; width: 100%; text-align: center; color: #555; }
-        .p-piece { width: 25px; height: 25px; background: blue; border-radius: 50%; border: 2px solid #fff; position: absolute; z-index: 10; transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        /* Top Bar Layout */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background: var(--card);
+            border-bottom: 1px solid var(--google-gray);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
 
-        /* Mission Log */
-        .mission-item { background: #eee; padding: 10px; margin: 5px 0; border-radius: 5px; display: flex; justify-content: space-between; border: 1px solid #ccc; color: #000; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        .header-right { text-align: right; }
+
+        /* Tools & Grid */
+        main {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .tool-card {
+            background: var(--card);
+            border-radius: 8px;
+            padding: 15px;
+            border: 1px solid var(--google-gray);
+        }
+
+        /* Calculator Styles (Google-Style) */
+        #calc-display {
+            width: 100%;
+            height: 60px;
+            background: none;
+            border: 1px solid var(--google-gray);
+            color: white;
+            text-align: right;
+            font-size: 24px;
+            margin-bottom: 10px;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .calc-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        button {
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            background: var(--google-gray);
+            color: white;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        button:hover { background: #4a4e52; }
+        .btn-op { background: #dadce0; color: #202124; }
+        .btn-blue { background: var(--accent); color: #202124; }
+
+        /* Alarm/Routine */
+        .alarm-input {
+            width: 70%;
+            padding: 8px;
+            background: #202124;
+            border: 1px solid var(--accent);
+            color: white;
+        }
+
+        /* Hidden States */
+        .hidden { display: none; }
     </style>
 </head>
 <body>
 
 <header>
-    <div style="font-size: 1.5rem;">SarvKarta Command Center 🛡️</div>
-    <div id="live-clock" style="font-weight:bold;">00:00:00 AM</div>
+    <div class="header-left">
+        <strong style="color: var(--accent)">SarvKarta 🛡️</strong>
+        <div id="alarm-section">
+            <input type="text" id="taskInput" class="alarm-input" placeholder="Enter task...">
+            <input type="time" id="alarmTime">
+            <button onclick="setAlarm()" class="btn-blue">Set Routine</button>
+        </div>
+    </div>
+    <div class="header-right">
+        <div id="weather-top">Scanning Weather...</div>
+        <div id="clock" style="font-size: 1.2rem; font-weight: bold;">00:00:00</div>
+        <div id="city-display" style="font-size: 0.8rem; opacity: 0.7;">Detecting Location...</div>
+    </div>
 </header>
 
-<div class="wrapper">
-    <aside>
-        <button class="nav-btn" onclick="go('home')">🏠 Home Base</button>
-        <button class="nav-btn" onclick="go('solver')">🔢 Google Calc</button>
-        <button class="nav-btn" onclick="go('tasks')">🗣️ Voice Missions</button>
-        <button class="nav-btn" onclick="go('games')">🎮 10 Games Zone</button>
-        <button class="nav-btn" onclick="go('weather')">🌦️ Weather Scan</button>
-        <button class="nav-btn" onclick="document.documentElement.toggleAttribute('data-theme')">🌓 Theme</button>
-    </aside>
+<main>
+    <!-- Weather Tool -->
+    <section class="tool-card">
+        <h3>🌦️ Weather Search</h3>
+        <input type="text" id="citySearch" placeholder="Enter city name..." class="alarm-input">
+        <button onclick="fetchWeather()">Search</button>
+        <div id="weatherResult" style="margin-top:15px"></div>
+    </section>
 
-    <main>
-        <div id="home" class="section active"><div class="card"><h1>System Ready, Captain! 🌟</h1><p>The board is set, the calculator is scientific, and I will shout your reminders!</p></div></div>
-
-        <!-- GOOGLE CALCULATOR -->
-        <div id="solver" class="section">
-            <div class="card">
-                <div id="calc-display">0</div>
-                <div class="calc-grid">
-                    <button class="c-key" onclick="cIn('(')">(</button><button class="c-key" onclick="cIn(')')">)</button><button class="c-key" onclick="cIn('%')">%</button><button class="c-key" onclick="cClr()">AC</button><button class="c-key" onclick="cIn('Math.sin(')">sin</button><button class="c-key" onclick="cIn('Math.cos(')">cos</button><button class="c-key" onclick="cIn('Math.tan(')">tan</button>
-                    <button class="c-key" onclick="cIn('Math.log10(')">log</button><button class="c-key" onclick="cIn('Math.PI')">π</button><button class="c-key" onclick="cIn('Math.E')">e</button><button class="c-key" onclick="cIn('**')">^</button><button class="c-key" onclick="cIn('7')">7</button><button class="c-key" onclick="cIn('8')">8</button><button class="c-key" onclick="cIn('9')">9</button>
-                    <button class="c-key" onclick="cIn('/')">÷</button><button class="c-key" onclick="cIn('Math.sqrt(')">√</button><button class="c-key" onclick="cIn('4')">4</button><button class="c-key" onclick="cIn('5')">5</button><button class="c-key" onclick="cIn('6')">6</button><button class="c-key" onclick="cIn('*')">×</button><button class="c-key" onclick="cIn('1')">1</button>
-                    <button class="c-key" onclick="cIn('2')">2</button><button class="c-key" onclick="cIn('3')">3</button><button class="c-key" onclick="cIn('-')">−</button><button class="c-key" onclick="cIn('0')">0</button><button class="c-key" onclick="cIn('.')">.</button><button class="c-key c-blue" onclick="cCalc()">=</button><button class="c-key" onclick="cIn('+')">+</button>
-                </div>
-            </div>
+    <!-- Calculator Tool -->
+    <section class="tool-card">
+        <h3>🔢 Calculator</h3>
+        <input type="text" id="calc-display" readonly value="0">
+        <div class="calc-grid">
+            <button onclick="clearCalc()">AC</button>
+            <button onclick="calcOp('(')">(</button>
+            <button onclick="calcOp(')')">)</button>
+            <button onclick="calcOp('/')" class="btn-op">÷</button>
+            <button onclick="calcNum('7')">7</button>
+            <button onclick="calcNum('8')">8</button>
+            <button onclick="calcNum('9')">9</button>
+            <button onclick="calcOp('*')" class="btn-op">×</button>
+            <button onclick="calcNum('4')">4</button>
+            <button onclick="calcNum('5')">5</button>
+            <button onclick="calcNum('6')">6</button>
+            <button onclick="calcOp('-')" class="btn-op">−</button>
+            <button onclick="calcNum('1')">1</button>
+            <button onclick="calcNum('2')">2</button>
+            <button onclick="calcNum('3')">3</button>
+            <button onclick="calcOp('+')" class="btn-op">+</button>
+            <button onclick="calcNum('0')">0</button>
+            <button onclick="calcNum('.')">.</button>
+            <button onclick="calculate()" class="btn-blue" style="grid-column: span 2">=</button>
         </div>
+    </section>
 
-        <!-- VOICE MISSIONS -->
-        <div id="tasks" class="section">
-            <div class="card">
-                <h2>Voice Reminder Log 🗣️</h2>
-                <input type="text" id="m-text" placeholder="Task name..." style="padding:10px; width:40%;">
-                <input type="time" id="m-time" style="padding:10px;">
-                <button class="nav-btn" onclick="addMission()" style="display:inline;">Set Mission</button>
-                <div id="mission-list" style="margin-top:15px;"></div>
-            </div>
+    <!-- Games Hub -->
+    <section class="tool-card">
+        <h3>🎮 Games Hub</h3>
+        <div class="calc-grid">
+            <button onclick="alert('Launching Chess...')">Chess</button>
+            <button onclick="alert('Launching Ludo...')">Ludo</button>
+            <button onclick="alert('Launching Snakes...')">Snakes</button>
+            <button onclick="alert('Launching Carrom...')">Carrom</button>
+            <button onclick="alert('Launching TicTacToe...')">Tic Tac Toe</button>
+            <button onclick="alert('Launching RPS...')">RPS</button>
         </div>
+    </section>
 
-        <!-- GAMES -->
-        <div id="games" class="section">
-            <div class="card">
-                <h3>Snakes & Ladders (Visual Board)</h3>
-                <div id="sl-board"></div>
-                <div style="text-align:center; margin-top:10px;">
-                    <button class="nav-btn" onclick="roll()">🎲 Roll Dice</button>
-                    <button class="nav-btn" onclick="initSL()">Reset</button>
-                    <p id="sl-status">Tile: 1</p>
-                </div>
-            </div>
-            <div class="card">
-                <h3>Other Games (Total 10)</h3>
-                <button class="c-key" onclick="alert('Tic-Tac-Toe AI Ready!')">1. Tic-Tac-Toe</button>
-                <button class="c-key" onclick="alert('Memory Match Ready!')">2. Memory</button>
-                <button class="c-key">3. RockPaper</button><button class="c-key">4. Snake</button>
-                <button class="c-key">5. Quiz</button><button class="c-key">6. MathRace</button>
-                <button class="c-key">7. Hangman</button><button class="c-key">8. Sudoku</button>
-                <button class="c-key">9. Flappy</button><button class="c-key">10. Pong</button>
-            </div>
-        </div>
-    </main>
-</div>
+    <!-- Timer & Stopwatch -->
+    <section class="tool-card">
+        <h3>⏱️ Timer & Stopwatch</h3>
+        <div id="stopwatch-display" style="font-size: 2rem; margin-bottom: 10px;">00:00:00</div>
+        <button onclick="startStopwatch()">Start</button>
+        <button onclick="stopStopwatch()">Stop</button>
+        <button onclick="resetStopwatch()">Reset</button>
+    </section>
+</main>
 
 <script>
-    function go(id) { document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); if(id==='games')initSL(); }
-
-    // TIME & SHOUTING LOGIC
-    let missions = [];
-    setInterval(() => {
-        let now = new Date();
-        let timeStr = now.toLocaleTimeString([], { hour12: true });
-        document.getElementById('live-clock').innerText = timeStr;
+    // --- 1. TIME & LOCATION ---
+    let userCity = "New York"; // Default
+    
+    function updateTime() {
+        const now = new Date();
+        document.getElementById('clock').innerText = now.toLocaleTimeString();
         
-        let currentTimeShort = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
-        missions.forEach(m => {
-            if(m.time === currentTimeShort) {
-                let speech = new SpeechSynthesisUtterance("Time for " + m.text);
-                window.speechSynthesis.speak(speech);
-            }
-        });
-    }, 1000);
+        // Check Alarm
+        checkAlarm(now);
+    }
+    setInterval(updateTime, 1000);
 
-    function addMission() {
-        let text = document.getElementById('m-text').value;
-        let time = document.getElementById('m-time').value;
-        if(text && time) {
-            missions.push({text, time});
-            document.getElementById('mission-list').innerHTML += `<div class="mission-item"><span>${text} at ${time}</span> <button onclick="this.parentElement.remove()">X</button></div>`;
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    document.getElementById('city-display').innerText = "Location Active";
+                    // In a real app, use reverse geocoding here
+                },
+                () => {
+                    const city = prompt("Location access denied. Please enter your city for time tracking:", "London");
+                    userCity = city || "London";
+                    document.getElementById('city-display').innerText = "City: " + userCity;
+                }
+            );
         }
     }
+    window.onload = getLocation;
 
-    // CALC LOGIC
-    let disp = document.getElementById('calc-display');
-    function cIn(v) { disp.innerText === '0' ? disp.innerText = v : disp.innerText += v; }
-    function cClr() { disp.innerText = '0'; }
-    function cCalc() { try { disp.innerText = eval(disp.innerText.replace('÷','/').replace('×','*')); } catch { disp.innerText = "Error"; } }
-
-    // SNAKES & LADDERS (Visual Logic)
-    let pos = 1;
-    const jumps = { 4:14, 9:31, 28:84, 51:67, 71:91, 17:7, 62:19, 98:78, 95:75 }; 
-    function initSL() {
-        pos = 1; const b = document.getElementById('sl-board'); b.innerHTML = '';
-        for(let i=100; i>=1; i--) {
-            let t = document.createElement('div'); t.className = 'tile'; t.id = 't-'+i; t.innerText = i;
-            if(jumps[i]) {
-                if(jumps[i] > i) { t.classList.add('ladder-start'); t.innerHTML += `<div class="jump-arrow">Go to ${jumps[i]} 🪜</div>`; }
-                else { t.classList.add('snake-start'); t.innerHTML += `<div class="jump-arrow">Go to ${jumps[i]} 🐍</div>`; }
-            }
-            b.appendChild(t);
-        }
-        updateP();
-    }
-    function updateP() {
-        document.querySelectorAll('.p-piece').forEach(p => p.remove());
-        document.getElementById('t-'+pos).innerHTML += `<div class="p-piece"></div>`;
-        document.getElementById('sl-status').innerText = "Tile: " + pos;
-    }
-    function roll() {
-        let r = Math.floor(Math.random()*6)+1;
-        alert("🎲 Rolled: " + r);
-        pos += r; if(pos > 100) pos = 100;
-        updateP();
-        if(jumps[pos]) {
+    // --- 2. WEATHER TOOL ---
+    async function fetchWeather() {
+        const city = document.getElementById('citySearch').value || userCity;
+        const res = document.getElementById('weatherResult');
+        res.innerHTML = "Fetching...";
+        
+        // NOTE: Replace 'YOUR_API_KEY' with a real OpenWeatherMap key
+        try {
+            // Mocking result for demonstration
             setTimeout(() => {
-                alert(pos < jumps[pos] ? "LADDER! 🪜" : "SNAKE! 🐍");
-                pos = jumps[pos]; updateP();
-            }, 600);
+                res.innerHTML = `<strong>${city}</strong>: 24°C | Humidity: 60% <br> Sky: Clear`;
+                document.getElementById('weather-top').innerText = `24°C, ${city}`;
+            }, 800);
+        } catch (e) {
+            res.innerHTML = "Error fetching weather.";
         }
-        if(pos === 100) alert("WINNER! 🏆");
+    }
+
+    // --- 3. CALCULATOR LOGIC ---
+    let calcScreen = document.getElementById('calc-display');
+    function calcNum(n) { if(calcScreen.value === "0") calcScreen.value = n; else calcScreen.value += n; }
+    function calcOp(op) { calcScreen.value += op; }
+    function clearCalc() { calcScreen.value = "0"; }
+    function calculate() {
+        try { calcScreen.value = eval(calcScreen.value); }
+        catch { calcScreen.value = "Error"; }
+    }
+
+    // --- 4. HILARIOUS ALARM SYSTEM ---
+    let activeAlarm = null;
+
+    function setAlarm() {
+        const time = document.getElementById('alarmTime').value;
+        const task = document.getElementById('taskInput').value;
+        if(!time || !task) return alert("Enter time and task!");
+        activeAlarm = { time, task };
+        alert(`Routine set for ${time}: ${task}`);
+    }
+
+    function checkAlarm(now) {
+        if (!activeAlarm) return;
+        const currentTime = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
+        if (currentTime === activeAlarm.time) {
+            shoutTask(activeAlarm.task);
+            activeAlarm = null; // Reset
+        }
+    }
+
+    function shoutTask(task) {
+        const speech = new SpeechSynthesisUtterance();
+        speech.text = `HEY! LISTEN! It is time to ${task}. Stop being lazy and do it now!`;
+        speech.pitch = 2.0; // High hilarious pitch
+        speech.rate = 1.2;
+        window.speechSynthesis.speak(speech);
+    }
+
+    // --- 5. STOPWATCH ---
+    let swInterval;
+    let seconds = 0;
+    function startStopwatch() {
+        clearInterval(swInterval);
+        swInterval = setInterval(() => {
+            seconds++;
+            let h = Math.floor(seconds / 3600);
+            let m = Math.floor((seconds % 3600) / 60);
+            let s = seconds % 60;
+            document.getElementById('stopwatch-display').innerText = 
+                `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+        }, 1000);
+    }
+    function stopStopwatch() { clearInterval(swInterval); }
+    function resetStopwatch() { 
+        stopStopwatch(); 
+        seconds = 0; 
+        document.getElementById('stopwatch-display').innerText = "00:00:00"; 
     }
 </script>
+
 </body>
 </html>
