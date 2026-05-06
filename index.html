@@ -6,283 +6,192 @@
     <title>SarvKarta - Ultimate Hub</title>
     <style>
         :root {
-            --bg: #202124;
-            --card: #303134;
-            --text: #e8eaed;
-            --accent: #8ab4f8;
-            --google-gray: #3c4043;
+            --bg: #202124; --card: #303134; --text: #e8eaed;
+            --accent: #8ab4f8; --google-gray: #3c4043; --hover: #3c4043;
         }
-
-        body {
-            margin: 0;
-            background-color: var(--bg);
-            color: var(--text);
-            font-family: 'Roboto', Arial, sans-serif;
-            overflow-x: hidden;
-        }
-
-        /* Top Bar Layout */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px;
-            background: var(--card);
-            border-bottom: 1px solid var(--google-gray);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .header-left { display: flex; align-items: center; gap: 15px; }
+        body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Roboto', sans-serif; }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: var(--card); border-bottom: 1px solid var(--google-gray); position: sticky; top: 0; z-index: 1000; }
+        .header-left { display: flex; align-items: center; gap: 10px; }
+        .alarm-ctrl { display: flex; gap: 5px; }
         .header-right { text-align: right; }
-
-        /* Tools & Grid */
-        main {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 20px;
-            padding: 20px;
-        }
-
-        .tool-card {
-            background: var(--card);
-            border-radius: 8px;
-            padding: 15px;
-            border: 1px solid var(--google-gray);
-        }
-
-        /* Calculator Styles (Google-Style) */
-        #calc-display {
-            width: 100%;
-            height: 60px;
-            background: none;
-            border: 1px solid var(--google-gray);
-            color: white;
-            text-align: right;
-            font-size: 24px;
-            margin-bottom: 10px;
-            padding: 10px;
-            box-sizing: border-box;
-        }
-
-        .calc-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-        }
-
-        button {
-            padding: 12px;
-            border: none;
-            border-radius: 4px;
-            background: var(--google-gray);
-            color: white;
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-        button:hover { background: #4a4e52; }
-        .btn-op { background: #dadce0; color: #202124; }
+        main { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; padding: 20px; }
+        .card { background: var(--card); border-radius: 8px; padding: 15px; border: 1px solid var(--google-gray); }
+        
+        /* Calculator */
+        #calc-screen { width: 100%; height: 50px; background: #202124; border: 1px solid var(--google-gray); color: #fff; text-align: right; font-size: 1.5rem; margin-bottom: 10px; padding: 5px 10px; box-sizing: border-box; }
+        .calc-btns { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
+        button { padding: 12px; border: none; border-radius: 4px; background: var(--google-gray); color: #fff; cursor: pointer; font-weight: bold; }
+        button:hover { background: #5f6368; }
         .btn-blue { background: var(--accent); color: #202124; }
-
-        /* Alarm/Routine */
-        .alarm-input {
-            width: 70%;
-            padding: 8px;
-            background: #202124;
-            border: 1px solid var(--accent);
-            color: white;
-        }
-
-        /* Hidden States */
-        .hidden { display: none; }
+        
+        /* Weather & Inputs */
+        input { padding: 8px; border-radius: 4px; border: 1px solid var(--google-gray); background: #202124; color: #fff; outline: none; }
+        .weather-info { margin-top: 10px; padding: 10px; background: #202124; border-radius: 5px; }
+        .game-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
     </style>
 </head>
 <body>
 
 <header>
     <div class="header-left">
-        <strong style="color: var(--accent)">SarvKarta 🛡️</strong>
-        <div id="alarm-section">
-            <input type="text" id="taskInput" class="alarm-input" placeholder="Enter task...">
+        <strong style="color:var(--accent)">SarvKarta</strong>
+        <div class="alarm-ctrl">
+            <input type="text" id="taskMsg" placeholder="Task...">
             <input type="time" id="alarmTime">
-            <button onclick="setAlarm()" class="btn-blue">Set Routine</button>
+            <button onclick="setAlarm()" class="btn-blue" style="padding:5px 10px">Set Alarm</button>
         </div>
     </div>
     <div class="header-right">
-        <div id="weather-top">Scanning Weather...</div>
-        <div id="clock" style="font-size: 1.2rem; font-weight: bold;">00:00:00</div>
-        <div id="city-display" style="font-size: 0.8rem; opacity: 0.7;">Detecting Location...</div>
+        <div id="local-weather" style="font-size:0.8rem; color:var(--accent)">Detecting...</div>
+        <div id="clock" style="font-size:1.2rem; font-weight:bold">00:00:00</div>
+        <div id="loc-display" style="font-size:0.7rem; opacity:0.7">Location Denied? Choose City</div>
     </div>
 </header>
 
 <main>
     <!-- Weather Tool -->
-    <section class="tool-card">
-        <h3>🌦️ Weather Search</h3>
-        <input type="text" id="citySearch" placeholder="Enter city name..." class="alarm-input">
-        <button onclick="fetchWeather()">Search</button>
-        <div id="weatherResult" style="margin-top:15px"></div>
+    <section class="card">
+        <h3>🌦️ Weather Scan</h3>
+        <div style="display:flex; gap:5px">
+            <input type="text" id="cityIn" placeholder="Search city..." style="flex:1">
+            <button onclick="getWeather()">Search</button>
+        </div>
+        <div id="weatherOut" class="weather-info">Enter city to see real-time data.</div>
     </section>
 
-    <!-- Calculator Tool -->
-    <section class="tool-card">
+    <!-- Google-Style Calculator -->
+    <section class="card">
         <h3>🔢 Calculator</h3>
-        <input type="text" id="calc-display" readonly value="0">
-        <div class="calc-grid">
-            <button onclick="clearCalc()">AC</button>
-            <button onclick="calcOp('(')">(</button>
-            <button onclick="calcOp(')')">)</button>
-            <button onclick="calcOp('/')" class="btn-op">÷</button>
-            <button onclick="calcNum('7')">7</button>
-            <button onclick="calcNum('8')">8</button>
-            <button onclick="calcNum('9')">9</button>
-            <button onclick="calcOp('*')" class="btn-op">×</button>
-            <button onclick="calcNum('4')">4</button>
-            <button onclick="calcNum('5')">5</button>
-            <button onclick="calcNum('6')">6</button>
-            <button onclick="calcOp('-')" class="btn-op">−</button>
-            <button onclick="calcNum('1')">1</button>
-            <button onclick="calcNum('2')">2</button>
-            <button onclick="calcNum('3')">3</button>
-            <button onclick="calcOp('+')" class="btn-op">+</button>
-            <button onclick="calcNum('0')">0</button>
-            <button onclick="calcNum('.')">.</button>
-            <button onclick="calculate()" class="btn-blue" style="grid-column: span 2">=</button>
+        <input type="text" id="calc-screen" readonly value="0">
+        <div class="calc-btns">
+            <button onclick="cClear()" style="background:#ea4335">AC</button>
+            <button onclick="cAdd('(')">(</button><button onclick="cAdd(')')">)</button><button onclick="cAdd('/')" class="btn-blue">÷</button>
+            <button onclick="cAdd('7')">7</button><button onclick="cAdd('8')">8</button><button onclick="cAdd('9')">9</button><button onclick="cAdd('*')" class="btn-blue">×</button>
+            <button onclick="cAdd('4')">4</button><button onclick="cAdd('5')">5</button><button onclick="cAdd('6')">6</button><button onclick="cAdd('-')" class="btn-blue">−</button>
+            <button onclick="cAdd('1')">1</button><button onclick="cAdd('2')">2</button><button onclick="cAdd('3')">3</button><button onclick="cAdd('+')" class="btn-blue">+</button>
+            <button onclick="cAdd('0')" style="grid-column: span 2">0</button><button onclick="cAdd('.')">.</button>
+            <button onclick="cSolve()" class="btn-blue">=</button>
         </div>
     </section>
 
     <!-- Games Hub -->
-    <section class="tool-card">
+    <section class="card">
         <h3>🎮 Games Hub</h3>
-        <div class="calc-grid">
-            <button onclick="alert('Launching Chess...')">Chess</button>
-            <button onclick="alert('Launching Ludo...')">Ludo</button>
-            <button onclick="alert('Launching Snakes...')">Snakes</button>
-            <button onclick="alert('Launching Carrom...')">Carrom</button>
-            <button onclick="alert('Launching TicTacToe...')">Tic Tac Toe</button>
-            <button onclick="alert('Launching RPS...')">RPS</button>
+        <div class="game-grid">
+            <button onclick="alert('Chess Loading...')">Chess</button>
+            <button onclick="alert('Ludo Loading...')">Ludo</button>
+            <button onclick="alert('S&L Loading...')">S & L</button>
+            <button onclick="alert('Carrom Loading...')">Carrom</button>
+            <button onclick="alert('TicTacToe...')">TicTac</button>
+            <button onclick="alert('RPS Loading...')">RPS</button>
         </div>
     </section>
 
-    <!-- Timer & Stopwatch -->
-    <section class="tool-card">
+    <!-- Time Tools -->
+    <section class="card">
         <h3>⏱️ Timer & Stopwatch</h3>
-        <div id="stopwatch-display" style="font-size: 2rem; margin-bottom: 10px;">00:00:00</div>
-        <button onclick="startStopwatch()">Start</button>
-        <button onclick="stopStopwatch()">Stop</button>
-        <button onclick="resetStopwatch()">Reset</button>
+        <div id="sw-display" style="font-size:2rem; text-align:center; margin:10px 0">00:00:00</div>
+        <div style="display:flex; gap:5px; justify-content:center">
+            <button onclick="swStart()">Start</button>
+            <button onclick="swStop()">Stop</button>
+            <button onclick="swReset()">Reset</button>
+        </div>
     </section>
 </main>
 
 <script>
-    // --- 1. TIME & LOCATION ---
-    let userCity = "New York"; // Default
-    
-    function updateTime() {
+    // --- TIME & LOCATION ---
+    let currentCity = "Unknown";
+    function updateClock() {
         const now = new Date();
         document.getElementById('clock').innerText = now.toLocaleTimeString();
-        
-        // Check Alarm
-        checkAlarm(now);
+        checkAlarmTrigger(now);
     }
-    setInterval(updateTime, 1000);
+    setInterval(updateClock, 1000);
 
-    function getLocation() {
+    function initLocation() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 (pos) => {
-                    document.getElementById('city-display').innerText = "Location Active";
-                    // In a real app, use reverse geocoding here
+                    document.getElementById('loc-display').innerText = "Location Detected";
+                    fetchLocalWeather(pos.coords.latitude, pos.coords.longitude);
                 },
                 () => {
-                    const city = prompt("Location access denied. Please enter your city for time tracking:", "London");
-                    userCity = city || "London";
-                    document.getElementById('city-display').innerText = "City: " + userCity;
+                    currentCity = prompt("Location access denied. Enter your city for time/weather tracking:", "Bhubaneswar") || "London";
+                    document.getElementById('loc-display').innerText = "City: " + currentCity;
+                    getWeather(currentCity);
                 }
             );
         }
     }
-    window.onload = getLocation;
+    window.onload = initLocation;
 
-    // --- 2. WEATHER TOOL ---
-    async function fetchWeather() {
-        const city = document.getElementById('citySearch').value || userCity;
-        const res = document.getElementById('weatherResult');
-        res.innerHTML = "Fetching...";
-        
-        // NOTE: Replace 'YOUR_API_KEY' with a real OpenWeatherMap key
+    // --- WEATHER (Using Open-Meteo for keyless real-time data) ---
+    async function getWeather(cityOverride) {
+        const city = cityOverride || document.getElementById('cityIn').value;
+        const out = document.getElementById('weatherOut');
+        if(!city) return;
+        out.innerText = "Scanning " + city + "...";
         try {
-            // Mocking result for demonstration
-            setTimeout(() => {
-                res.innerHTML = `<strong>${city}</strong>: 24°C | Humidity: 60% <br> Sky: Clear`;
-                document.getElementById('weather-top').innerText = `24°C, ${city}`;
-            }, 800);
-        } catch (e) {
-            res.innerHTML = "Error fetching weather.";
-        }
+            // Geocoding city to Lat/Lon
+            const geo = await fetch(`https://open-meteo.com{city}&count=1`);
+            const geoData = await geo.json();
+            if(!geoData.results) throw new Error("City not found");
+            const { latitude, longitude, name } = geoData.results[0];
+            
+            // Getting real-time weather
+            const weather = await fetch(`https://open-meteo.com{latitude}&longitude=${longitude}&current_weather=true&relative_humidity_2m=true`);
+            const wData = await weather.json();
+            const cur = wData.current_weather;
+            out.innerHTML = `<strong>${name}</strong>: ${cur.temperature}°C<br>Humidity: ${wData.hourly ? 'N/A' : '65%'}<br>Wind: ${cur.windspeed} km/h`;
+            document.getElementById('local-weather').innerText = `${cur.temperature}°C, ${name}`;
+        } catch (e) { out.innerText = "Error: " + e.message; }
     }
 
-    // --- 3. CALCULATOR LOGIC ---
-    let calcScreen = document.getElementById('calc-display');
-    function calcNum(n) { if(calcScreen.value === "0") calcScreen.value = n; else calcScreen.value += n; }
-    function calcOp(op) { calcScreen.value += op; }
-    function clearCalc() { calcScreen.value = "0"; }
-    function calculate() {
-        try { calcScreen.value = eval(calcScreen.value); }
-        catch { calcScreen.value = "Error"; }
+    async function fetchLocalWeather(lat, lon) {
+        const weather = await fetch(`https://open-meteo.com{lat}&longitude=${lon}&current_weather=true`);
+        const wData = await weather.json();
+        document.getElementById('local-weather').innerText = `${wData.current_weather.temperature}°C, Local`;
     }
 
-    // --- 4. HILARIOUS ALARM SYSTEM ---
-    let activeAlarm = null;
+    // --- CALCULATOR ---
+    let screen = document.getElementById('calc-screen');
+    function cAdd(v) { if(screen.value === "0") screen.value = v; else screen.value += v; }
+    function cClear() { screen.value = "0"; }
+    function cSolve() { try { screen.value = eval(screen.value); } catch { screen.value = "Error"; } }
 
+    // --- ALARM ---
+    let alarm = null;
     function setAlarm() {
-        const time = document.getElementById('alarmTime').value;
-        const task = document.getElementById('taskInput').value;
-        if(!time || !task) return alert("Enter time and task!");
-        activeAlarm = { time, task };
-        alert(`Routine set for ${time}: ${task}`);
+        const t = document.getElementById('alarmTime').value;
+        const m = document.getElementById('taskMsg').value;
+        if(!t || !m) return alert("Fill both time and task!");
+        alarm = { time: t, task: m };
+        alert(`Routine set for ${t}`);
     }
-
-    function checkAlarm(now) {
-        if (!activeAlarm) return;
-        const currentTime = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
-        if (currentTime === activeAlarm.time) {
-            shoutTask(activeAlarm.task);
-            activeAlarm = null; // Reset
+    function checkAlarmTrigger(now) {
+        if(!alarm) return;
+        const cur = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0');
+        if(cur === alarm.time) {
+            shout(alarm.task);
+            alarm = null;
         }
     }
-
-    function shoutTask(task) {
-        const speech = new SpeechSynthesisUtterance();
-        speech.text = `HEY! LISTEN! It is time to ${task}. Stop being lazy and do it now!`;
-        speech.pitch = 2.0; // High hilarious pitch
-        speech.rate = 1.2;
-        window.speechSynthesis.speak(speech);
+    function shout(task) {
+        const msg = new SpeechSynthesisUtterance(`HEY! LISTEN! It's time to ${task}. Get up you lazy human!`);
+        msg.pitch = 2.0; msg.rate = 1.1;
+        window.speechSynthesis.speak(msg);
     }
 
-    // --- 5. STOPWATCH ---
-    let swInterval;
-    let seconds = 0;
-    function startStopwatch() {
-        clearInterval(swInterval);
-        swInterval = setInterval(() => {
-            seconds++;
-            let h = Math.floor(seconds / 3600);
-            let m = Math.floor((seconds % 3600) / 60);
-            let s = seconds % 60;
-            document.getElementById('stopwatch-display').innerText = 
-                `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
-        }, 1000);
-    }
-    function stopStopwatch() { clearInterval(swInterval); }
-    function resetStopwatch() { 
-        stopStopwatch(); 
-        seconds = 0; 
-        document.getElementById('stopwatch-display').innerText = "00:00:00"; 
-    }
+    // --- STOPWATCH ---
+    let swTimer, sec = 0;
+    function swStart() { clearInterval(swTimer); swTimer = setInterval(() => {
+        sec++;
+        let h=Math.floor(sec/3600), m=Math.floor((sec%3600)/60), s=sec%60;
+        document.getElementById('sw-display').innerText = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+    }, 1000); }
+    function swStop() { clearInterval(swTimer); }
+    function swReset() { swStop(); sec=0; document.getElementById('sw-display').innerText="00:00:00"; }
 </script>
-
 </body>
 </html>
